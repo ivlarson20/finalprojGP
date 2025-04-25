@@ -201,7 +201,7 @@ void LevelA::update(float delta_time)
 
         if (touching_door){
             printf("Door entered, onto level B!");
-            m_game_state.next_scene_id = 1;
+            m_game_state.next_scene_id = 2;
         }
     }
     

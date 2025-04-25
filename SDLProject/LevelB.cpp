@@ -12,11 +12,11 @@
 #include "Utility.h"
 #include "Effects.h"
 
-Effects *g_effects;
 
 #define LEVEL_WIDTH 20
 #define LEVEL_HEIGHT 8
 #define FIXED_TIMESTEP 0.0166666f
+float door_cool = 0.0f;
 
 extern glm::mat4 g_view_matrix, g_projection_matrix;
 
@@ -123,10 +123,10 @@ void LevelB::initialise(){
 
 void LevelB::update(float delta_time)
 {
-    
-//    while (delta_time >= FIXED_TIMESTEP){
-//        g_effects->update(FIXED_TIMESTEP);
-//    }
+
+    if (door_cool > 0.0f){
+        door_cool -= delta_time;
+    }
     
     if (!m_game_state.game_lost && !m_game_state.player->m_wins) {
         m_game_state.timer -= delta_time;
@@ -159,7 +159,7 @@ void LevelB::update(float delta_time)
         
         if (m_game_state.player->check_collision(&m_game_state.knight[i])){
             Mix_PlayChannel(-1, m_game_state.slashSfx, 0);
-            m_game_state.next_scene_id = 1;
+            m_game_state.next_scene_id = 2;
             return;
         }
     }
@@ -186,9 +186,10 @@ void LevelB::update(float delta_time)
             fabs(player_pos.x - door_0_pos.x) < (door_w / 2.0f + 0.7f / 2.0f) &&
             fabs(player_pos.y - door_0_pos.y) < (door_h / 2.0f + 0.7f / 2.0f);
 
-    if (touching_door_0){
+    if (touching_door_0 && door_cool <= 0.0f){
         printf("Door entered, moving to door OG\n");
         player_pos = respawn_pos;
+        door_cool = 0.5f;
         m_use_spotlight = !m_use_spotlight;
     }
 
@@ -197,54 +198,64 @@ void LevelB::update(float delta_time)
             fabs(player_pos.x - door_1_pos.x) < (door_w / 2.0f + 0.7f / 2.0f) &&
             fabs(player_pos.y - door_1_pos.y) < (door_h / 2.0f + 0.7f / 2.0f);
 
-    if (touching_door_1){
+    if (touching_door_1 && door_cool <= 0.0f){
         printf("Door entered, moving to door 5\n");
         player_pos = door_5_pos;
+        door_cool = 0.5f;
     }
     // door 2
     bool touching_door_2 =
             fabs(player_pos.x - door_2_pos.x) < (door_w / 2.0f + 0.7f / 2.0f) &&
             fabs(player_pos.y - door_2_pos.y) < (door_h / 2.0f + 0.7f / 2.0f);
 
-    if (touching_door_2){
+    if (touching_door_2 && door_cool <= 0.0f){
         printf("Door entered, moving to door 4\n");
         player_pos = door_4_pos;
+        door_cool = 0.5f;
     }
     // door 3
     bool touching_door_3 =
             fabs(player_pos.x - door_3_pos.x) < (door_w / 2.0f + 0.7f / 2.0f) &&
             fabs(player_pos.y - door_3_pos.y) < (door_h / 2.0f + 0.7f / 2.0f);
 
-    if (touching_door_3){
+    if (touching_door_3 && door_cool <= 0.0f){
         printf("Door entered, moving to door 6\n");
         player_pos = door_6_pos;
+        door_cool = 0.5f;
+
     }
     // door 4
     bool touching_door_4 =
             fabs(player_pos.x - door_4_pos.x) < (door_w / 2.0f + 0.7f / 2.0f) &&
             fabs(player_pos.y - door_4_pos.y) < (door_h / 2.0f + 0.7f / 2.0f);
 
-    if (touching_door_4){
+    if (touching_door_4 && door_cool <= 0.0f){
         printf("Door entered, moving to door 2\n");
         player_pos = door_2_pos;
+        door_cool = 0.5f;
+
     }
     // door 5 ONTO NEXT LEVEL
     bool touching_door_5 =
             fabs(player_pos.x - door_5_pos.x) < (door_w / 2.0f + 0.7f / 2.0f) &&
             fabs(player_pos.y - door_5_pos.y) < (door_h / 2.0f + 0.7f / 2.0f);
 
-    if (touching_door_5){
+    if (touching_door_5 && door_cool <= 0.0f){
         printf("Door entered, moving onto next level\n");
-        m_game_state.next_scene_id = 2;
+        m_game_state.next_scene_id = 3;
+        door_cool = 0.5f;
+
     }
     // door 6
     bool touching_door_6 =
             fabs(player_pos.x - door_6_pos.x) < (door_w / 2.0f + 0.7f / 2.0f) &&
             fabs(player_pos.y - door_6_pos.y) < (door_h / 2.0f + 0.7f / 2.0f);
 
-    if (touching_door_6){
+    if (touching_door_6 && door_cool <= 0.0f){
         printf("Door entered, moving to door 3\n");
         player_pos = door_3_pos;
+        door_cool = 0.5f;
+
     }
     m_game_state.player->set_position(player_pos);
 

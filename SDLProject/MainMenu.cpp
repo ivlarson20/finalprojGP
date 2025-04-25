@@ -29,8 +29,8 @@ void MainMenu::initialise(){
     
     m_game_state.background = new Entity();
     m_game_state.background->set_position(glm::vec3(0.0f, 0.0f, 0.0f));
-    m_game_state.background->set_scale(glm::vec3(1.0f,1.0f, 0.0f));
-    m_game_state.background->m_texture_id = Utility::load_texture("assets/tempMain.jpg");
+    m_game_state.background->set_scale(glm::vec3(6.0f,6.0f, 0.0f));
+    m_game_state.background->m_texture_id = Utility::load_texture("assets/mainMenuBG.png");
     m_game_state.background->update(0.0f, m_game_state.background, NULL, 0, m_game_state.map);
     
     m_game_state.player = new Entity();
@@ -46,7 +46,7 @@ void MainMenu::render(ShaderProgram *program){
     m_game_state.map->render(program);
     m_game_state.background->render(program);
     
-    Utility::draw_text(program, m_font_texture_id, std::string("Press Enter to Start"), 0.75f, -0.45f, glm::vec3(-2.75f, 0.0f, 0.0f));
+   // Utility::draw_text(program, m_font_texture_id, std::string("Press Enter to Start"), 0.75f, -0.45f, glm::vec3(-2.75f, 0.0f, 0.0f));
     //Utility::draw_text(<#ShaderProgram *program#>, <#GLuint font_texture_id#>, <#std::string text#>, <#float screen_size#>, <#float spacing#>, <#glm::vec3 position#>)
 }
 

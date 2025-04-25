@@ -14,6 +14,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
 
+
 enum EffectType { NONE, FADEIN, FADEOUT, GROW, SHRINK };
 
 class Effects {
@@ -39,3 +40,4 @@ public:
     void update(float delta_time);
     void render();
 };
+

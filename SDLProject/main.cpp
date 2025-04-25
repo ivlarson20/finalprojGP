@@ -67,7 +67,7 @@ LevelA *g_levelA;
 LevelB *g_levelB;
 LevelC *g_levelC;
 
-//Effects *g_effects = nullptr;
+Effects *g_effects;
 Scene   *g_levels[3];
 
 SDL_Window* g_display_window = nullptr;
@@ -140,7 +140,8 @@ void initialise()
     
     switch_to_scene(g_levelB);
     
-    //g_effects = new Effects(g_projection_matrix, g_view_matrix);
+    g_effects = new Effects(g_projection_matrix, g_view_matrix);
+  //  g_effects->start(FADEIN, 1.0f);
 }
 
 void process_input()
@@ -210,7 +211,10 @@ void update()
     
     while (delta_time >= FIXED_TIMESTEP) {
         g_curr_scene->update(FIXED_TIMESTEP);
-       // g_effects->update(FIXED_TIMESTEP);
+        if (g_effects != nullptr){
+            g_effects->update(FIXED_TIMESTEP);
+
+        }
         
         g_is_colliding_bottom = g_curr_scene->get_state().player->get_collided_bottom();
         
@@ -250,8 +254,9 @@ void render()
     glClear(GL_COLOR_BUFFER_BIT);
        
     g_curr_scene->render(&g_shader_program);
-       
- //   g_effects->render();
+    if (g_effects != nullptr){
+        g_effects->render();
+    }
     
     SDL_GL_SwapWindow(g_display_window);
 }
@@ -264,7 +269,7 @@ void shutdown()
     delete g_levelB;
     delete g_levelC;
     delete g_main_menu;
-  //  delete g_effects;
+    delete g_effects;
 }
 
 // ––––– DRIVER GAME LOOP ––––– //
@@ -277,10 +282,22 @@ int main(int argc, char* argv[])
         process_input();
         update();
         
-        if (g_curr_scene->m_game_state.next_scene_id > 0){
-            switch_to_scene(g_levels[g_curr_scene->m_game_state.next_scene_id]);
-            //g_curr_scene->m_game_state.player->set_lives(g_player_lives);
+        if (g_curr_scene != g_main_menu && g_curr_scene->m_game_state.next_scene_id > 0) {
+            g_effects->start(FADEOUT, 1.0f); // Fade out exiting level
+            switch_to_scene(g_levels[g_curr_scene->m_game_state.next_scene_id - 1]);
+            g_curr_scene->m_game_state.next_scene_id = -1;
+            g_effects->start(FADEIN, 1.0f); // Fade in entering next level
         }
+        else if (g_curr_scene != g_main_menu && g_curr_scene->m_game_state.next_scene_id == 0) {
+            g_effects->start(FADEOUT, 1.0f); // Fade out exiting level
+            switch_to_scene(g_main_menu);
+          
+        }
+        else if (g_curr_scene == g_main_menu && g_curr_scene->m_game_state.next_scene_id > 0) {
+      
+            switch_to_scene(g_levels[g_curr_scene->m_game_state.next_scene_id - 1]);
+        }
+
         
         render();
     }
