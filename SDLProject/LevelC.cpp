@@ -165,7 +165,7 @@ void LevelC::update(float delta_time){
                         int grid_y = static_cast<int>(round(-platform.get_position().y)); // flip Y because OpenGL
 
                         // Set the tile to a solid ground tile (example: 1 = ground in your tileset)
-                        m_game_state.map->set_tile(grid_x, grid_y, 120);
+                        m_game_state.map->set_tile(grid_x, grid_y, 293);
                     }
                 }
             } else {

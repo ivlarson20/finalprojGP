@@ -138,7 +138,7 @@ void initialise()
     g_levels[1] = g_levelB;
     g_levels[2] = g_levelC;
     
-    switch_to_scene(g_levelB);
+    switch_to_scene(g_main_menu);
     
     g_effects = new Effects(g_projection_matrix, g_view_matrix);
   //  g_effects->start(FADEIN, 1.0f);
